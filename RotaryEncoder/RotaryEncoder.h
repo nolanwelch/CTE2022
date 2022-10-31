@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-#define RE_TIMEOUT_MS 1000
+#define ENCODER_TIMEOUT_MS 1000
 
 class RotaryEncoder {
 	public:

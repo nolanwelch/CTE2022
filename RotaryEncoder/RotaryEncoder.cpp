@@ -16,7 +16,7 @@ RotaryEncoder::RotaryEncoder(int dt, int clk, int pulsesPerRotation) {
 }
 
 int RotaryEncoder::getRPM() {
-	if (!_enabled || millis() - _lastMs > RE_TIMEOUT_MS) {
+	if (!_enabled || millis() - _lastMs > ENCODER_TIMEOUT_MS) {
 		return 0;
 	}
 	return rpm;
@@ -26,23 +26,10 @@ void RotaryEncoder::updateEncoder() {
 	if (!_enabled) {
 		return;
 	}
-
-	_currentClkState = digitalRead(_clk);
-
-	if (_currentClkState != _lastClkState && _currentClkState == 1) {
-		if (digitalRead(_dt) != _currentClkState) {
-			_counter--;
-			_clockwise = false;
-		} else {
-			_counter++;
-			_clockwise = true;
-		}
-	}
-
-	_rpm = 1 / ((millis() - _lastMs) * 6000 * _pulsesPerRotation);
 	
-	_lastMs = millis()
-	_lastClkState = _currentClkState;
+	unsigned long currentMs = millis();
+	_rpm = 1 / ((currentMs - _lastMs) * 6000 * _pulsesPerRotation);
+	_lastMs = currentMs;
 }
 
 void RotaryEncoder::enable() {
