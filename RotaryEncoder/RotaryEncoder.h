@@ -5,7 +5,7 @@
 
 class RotaryEncoder {
 	public:
-		RotaryEncoder(int dt, int clk);
+		RotaryEncoder(int dt, int clk, int pulsesPerRotation);
 		void updateEncoder();
 		int getRPM();
 		void enable();
@@ -14,6 +14,7 @@ class RotaryEncoder {
 	private:
 		int _dt;
 		int _clk;
+		int _pulsesPerRotation;
 		int _counter;
 		unsigned long _lastMs;
 		int _rpm;

@@ -1,27 +1,28 @@
 #include "Arduino.h"
 #include "RotaryEncoder.h"
 
-RotaryEncoder::RotaryEncoder(int dt, int clk) {
+RotaryEncoder::RotaryEncoder(int dt, int clk, int pulsesPerRotation) {
 	pinMode(dt, INPUT);
 	pinMode(clk, INPUT);
 	_dt = dt;
 	_clk = clk;
-	attachInterrupt(0, updateEncoder, CHANGE);
-	attachInterrupt(1, updateEncoder, CHANGE);
+	_pulsesPerRotation = pulsesPerRotation;
+	attachInterrupt(0, RotaryEncoder::updateEncoder, CHANGE);
+	attachInterrupt(1, RotaryEncoder::updateEncoder, CHANGE);
 	_enable = true;
 	_clockwise = true;
 	_counter = 0;
 	_lastMs = millis();
 }
 
-int getRPM() {
+int RotaryEncoder::getRPM() {
 	if (!_enabled) {
 		return -1;
 	}
 	return rpm;
 }
 
-void updateEncoder() {
+void RotaryEncoder::updateEncoder() {
 	if (!_enabled) {
 		return;
 	}
@@ -37,21 +38,21 @@ void updateEncoder() {
 			_clockwise = true;
 		}
 	}
-
+	
+	_rpm = 1 / ((millis() - _lastMs) * 6000 * _pulsesPerRotation);
+	
+	_lastMs = millis()
 	_lastClkState = _currentClkState;
-
-	// TODO: Calculate and store current RPM
-	_rpm = 0;
 }
 
-void enable() {
+void RotaryEncoder::enable() {
 	_enabled = true;
 }
 
-void disable() {
+void RotaryEncoder::disable() {
 	_enabled = false;
 }
 
-bool isEnabled() {
+bool RotaryEncoder::isEnabled() {
 	return _enabled;
 }
