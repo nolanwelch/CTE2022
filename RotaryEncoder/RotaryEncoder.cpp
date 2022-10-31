@@ -16,8 +16,8 @@ RotaryEncoder::RotaryEncoder(int dt, int clk, int pulsesPerRotation) {
 }
 
 int RotaryEncoder::getRPM() {
-	if (!_enabled) {
-		return -1;
+	if (!_enabled || millis() - _lastMs > RE_TIMEOUT_MS) {
+		return 0;
 	}
 	return rpm;
 }
@@ -38,7 +38,7 @@ void RotaryEncoder::updateEncoder() {
 			_clockwise = true;
 		}
 	}
-	
+
 	_rpm = 1 / ((millis() - _lastMs) * 6000 * _pulsesPerRotation);
 	
 	_lastMs = millis()

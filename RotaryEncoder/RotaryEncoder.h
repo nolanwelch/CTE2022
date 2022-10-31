@@ -3,6 +3,8 @@
 
 #include <Arduino.h>
 
+#define RE_TIMEOUT_MS 1000
+
 class RotaryEncoder {
 	public:
 		RotaryEncoder(int dt, int clk, int pulsesPerRotation);
