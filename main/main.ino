@@ -1,10 +1,13 @@
 #include "RotaryEncoder.h"
 
-#define DT_PIN 3
-#define CLK_PIN 4
-#define PULSES_PER_ROTATION 20
+#define RE_DT_PIN 3
+#define RE_CLK_PIN 4
+#define RE_PULSES_PER_ROTATION 20
 
-RotaryEncoder encoder = RotaryEncoder(DT_PIN, CLK_PIN, PULSES_PER_ROTATION);
+#define LSC_DIN_PIN 7
+
+LightStripController controller = LightStripController(DIN_PIN);
+RotaryEncoder encoder = RotaryEncoder(DT_PIN, CLK_PIN, PULSES_PER_ROTATION, controller);
 
 void setup() {
 	
