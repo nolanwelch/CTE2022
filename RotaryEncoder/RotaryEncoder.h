@@ -2,30 +2,26 @@
 #define RotaryEncoder_h
 
 #include <Arduino.h>
-#include "LightStripController.h"
 
 #define ENCODER_TIMEOUT_MS 1000
 
 class RotaryEncoder {
 	public:
-		RotaryEncoder(int dt, int clk, int pulsesPerRotation, LightStripController controller);
+		RotaryEncoder(int dt, int clk, int pulsesPerRotation);
 		void updateEncoder();
-		int getRPM();
+		int getPulses();
 		void enable();
 		void disable();
 		bool isEnabled();
 	private:
 		int _dt;
 		int _clk;
+		int _lastMs;
 		int _pulsesPerRotation;
-		LightStripController _controller;
-		int _counter;
-		unsigned long _lastMs;
-		int _rpm;
-		bool _clockwise;
 		bool _currentClkState;
 		bool _lastClkState;
 		bool _enabled;
+		int _pulses;
 };
 
 #endif

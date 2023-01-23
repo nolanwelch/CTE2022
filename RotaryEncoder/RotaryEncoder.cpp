@@ -1,36 +1,35 @@
 #include "Arduino.h"
 #include "RotaryEncoder.h"
 
-RotaryEncoder::RotaryEncoder(int dt, int clk, int pulsesPerRotation, LightStripController controller) {
+RotaryEncoder::RotaryEncoder(int dt, int clk, int pulsesPerRotation) {
 	pinMode(dt, INPUT);
 	pinMode(clk, INPUT);
 	_dt = dt;
 	_clk = clk;
 	_pulsesPerRotation = pulsesPerRotation;
-	_controller = controller;
-	attachInterrupt(0, RotaryEncoder::updateEncoder, CHANGE);
-	attachInterrupt(1, RotaryEncoder::updateEncoder, CHANGE);
-	_enable = true;
-	_clockwise = true;
-	_counter = 0;
+	attachInterrupt(0, updateEncoder, CHANGE);
+	attachInterrupt(1, updateEncoder, CHANGE);
 	_lastMs = millis();
+	_enabled = true;
+	_pulses = 0;
 }
 
-int RotaryEncoder::getRPM() {
+int RotaryEncoder::getPulses() {
 	if (!_enabled || millis() - _lastMs > ENCODER_TIMEOUT_MS) {
-		return 0;
+		_pulses = 0;
 	}
-	return rpm;
+	return _pulses;
 }
 
 void RotaryEncoder::updateEncoder() {
 	if (!_enabled) {
 		return;
 	}
-
-	unsigned long currentMs = millis();
-	_rpm = 1 / ((currentMs - _lastMs) * 6000 * _pulsesPerRotation);
-	_lastMs = currentMs;
+	_lastMs = millis();
+	if(_currentClkState != _lastClkState && _currentClkState == 1) {
+		_pulses++;
+		_lastClkState = _currentClkState;
+	}
 }
 
 void RotaryEncoder::enable() {
